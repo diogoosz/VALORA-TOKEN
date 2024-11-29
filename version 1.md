@@ -1,10 +1,10 @@
-# Valora Token Contract VERSION 1
+# Valora Token Contract Version 1
 
 This is the Solidity contract for the **Valora Token (VAL)**, following the BEP-20 standard.
 
 ## Contract Code
 
-VERSION 1 OF THE VALORA TOKEN WITH ERRORS
+Version 1 of the Valora Token with errors
 
 ```solidity
 // SPDX-License-Identifier: MIT
