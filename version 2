@@ -1,10 +1,22 @@
+# Valora Token (VAL)
+
+This repository contains the source code for **Valora Token**, an ERC20 token implemented on the Binance Smart Chain (BEP20), with 8 decimal precision.
+
+## Token Contract
+
 updated version of the code with automatic value conversions (VEXIS, VEX, mVAL, cVAL, dVAL), internally in the contract.
 
+### Contract Code
 
+```html
+<button onclick="copyToClipboard()">Copy Code</button>
+
+<pre id="contractCode">
+<code>
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-// Interface do BEP20
+// BEP20 Interface
 interface IBEP20 {
     function totalSupply() external view returns (uint256);
     function balanceOf(address account) external view returns (uint256);
@@ -25,29 +37,24 @@ contract ValoraToken is IBEP20 {
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
 
-    // Construtor que define a quantidade inicial de tokens
+    // Constructor that defines the initial token supply
     constructor(uint256 initialSupply) {
-        _totalSupply = initialSupply * 10 ** uint256(decimals);  // Ajusta para 8 decimais
+        _totalSupply = initialSupply * 10 ** uint256(decimals);  // Adjusts for 8 decimals
         _balances[msg.sender] = _totalSupply;
         emit Transfer(address(0), msg.sender, _totalSupply);
     }
 
-    // Funções padrão do BEP20
-
-    // Retorna o total de tokens em circulação
+    // BEP20 standard functions
     function totalSupply() external view override returns (uint256) {
         return _totalSupply;
     }
 
-    // Retorna o saldo de tokens de uma conta específica
     function balanceOf(address account) external view override returns (uint256) {
         return _balances[account];
     }
 
-    // Transfere tokens para um endereço (considerando os decimais)
     function transfer(address recipient, uint256 amount) external override returns (bool) {
-        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Converte automaticamente para a menor unidade
-        
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Automatically converts to the smallest unit
         require(recipient != address(0), "ERC20: transfer to the zero address");
         require(_balances[msg.sender] >= amountWithDecimals, "ERC20: transfer amount exceeds balance");
 
@@ -58,18 +65,15 @@ contract ValoraToken is IBEP20 {
         return true;
     }
 
-    // Aprova um endereço para gastar tokens em nome do proprietário
     function approve(address spender, uint256 amount) external override returns (bool) {
-        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Converte automaticamente para a menor unidade
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Automatically converts to the smallest unit
         _allowances[msg.sender][spender] = amountWithDecimals;
         emit Approval(msg.sender, spender, amountWithDecimals);
         return true;
     }
 
-    // Transfere tokens de um endereço para outro, com permissão (considerando os decimais)
     function transferFrom(address sender, address recipient, uint256 amount) external override returns (bool) {
-        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Converte automaticamente para a menor unidade
-        
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Automatically converts to the smallest unit
         require(sender != address(0), "ERC20: transfer from the zero address");
         require(recipient != address(0), "ERC20: transfer to the zero address");
         require(_balances[sender] >= amountWithDecimals, "ERC20: transfer amount exceeds balance");
@@ -83,43 +87,38 @@ contract ValoraToken is IBEP20 {
         return true;
     }
 
-    // Retorna a quantidade de tokens que um endereço está autorizado a gastar de outro
     function allowance(address owner, address spender) external view override returns (uint256) {
         return _allowances[owner][spender];
     }
 
-    // Função de distribuição de tokens para múltiplos endereços
     function distributeTokens(address[] memory recipients, uint256[] memory amounts) public {
         require(recipients.length == amounts.length, "ERC20: recipients and amounts length mismatch");
 
         uint256 totalAmount = 0;
         for (uint256 i = 0; i < amounts.length; i++) {
-            totalAmount += amounts[i] * (10 ** uint256(decimals));  // Considera os decimais ao somar
+            totalAmount += amounts[i] * (10 ** uint256(decimals));  // Consider decimals when summing
         }
 
         require(_balances[msg.sender] >= totalAmount, "ERC20: insufficient balance for distribution");
 
         for (uint256 i = 0; i < recipients.length; i++) {
-            uint256 amountWithDecimals = amounts[i] * (10 ** uint256(decimals));  // Converte para a menor unidade
+            uint256 amountWithDecimals = amounts[i] * (10 ** uint256(decimals));  // Convert to the smallest unit
             _balances[msg.sender] -= amountWithDecimals;
             _balances[recipients[i]] += amountWithDecimals;
             emit Transfer(msg.sender, recipients[i], amountWithDecimals);
         }
     }
 
-    // Função de queima de tokens (burn) considerando os decimais
     function burn(uint256 amount) public {
-        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Converte automaticamente para a menor unidade
-        
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Automatically converts to the smallest unit
         require(_balances[msg.sender] >= amountWithDecimals, "ERC20: burn amount exceeds balance");
-        
+
         _balances[msg.sender] -= amountWithDecimals;
         _totalSupply -= amountWithDecimals;
-        
-        emit Transfer(msg.sender, address(0), amountWithDecimals); // Emite um evento de transferência para o endereço 0 (queimando)
+
+        emit Transfer(msg.sender, address(0), amountWithDecimals); // Emit transfer event to the 0 address (burning)
     }
 
-    // Função para saber o número de unidades menores de VALORA
     function getUnitName(uint256 amount) public pure returns (string memory) {
         if (amount == 10 ** 6) {
             return "VEX";
@@ -136,3 +135,18 @@ contract ValoraToken is IBEP20 {
         }
     }
 }
+</code>
+</pre>
+
+<script>
+function copyToClipboard() {
+  var copyText = document.getElementById("contractCode");
+  var range = document.createRange();
+  range.selectNode(copyText);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
+  document.execCommand("copy");
+  alert("Code copied to clipboard!");
+}
+</script>
+
