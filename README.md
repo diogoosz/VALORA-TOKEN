@@ -6,7 +6,7 @@ Valora Token is a cryptocurrency built on the Binance Smart Chain (BSC), designe
 
 - **Total Supply**: 1 billion VAL.  
 - **Advanced Divisibility**:  
-- **1 VAL**: Main unit.  
+  - **1 VAL**: Main unit.  
   - **1 Vexis (VXS)**: 0.00000001 VAL (smallest unit).  
   - **1 Vex (VEX)**: 0.000001 VAL.  
   - **1 Millivalora (mVAL)**: 0.001 VAL.  
