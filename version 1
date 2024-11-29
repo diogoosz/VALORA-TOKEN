@@ -113,4 +113,21 @@ contract ValoraToken is IBEP20 {
         
         emit Transfer(msg.sender, address(0), amount); // Emite um evento de transferência para o endereço 0 (queimando)
     }
+
+    // Função para saber o número de unidades menores de VALORA
+    function getUnitName(uint256 amount) public pure returns (string memory) {
+        if (amount == 10 ** 6) {
+            return "VEX";
+        } else if (amount == 10 ** 7) {
+            return "VEXIS";
+        } else if (amount == 10 ** 5) {
+            return "mVAL";
+        } else if (amount == 10 ** 4) {
+            return "cVAL";
+        } else if (amount == 10 ** 3) {
+            return "dVAL";
+        } else {
+            return "VAL";
+        }
+    }
 }
