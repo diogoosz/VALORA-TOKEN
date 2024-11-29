@@ -1,28 +1,28 @@
-Valora Token Project - README
-Overview
-Valora (VAL) is a cutting-edge cryptocurrency designed to deliver transparency, efficiency, and value growth. Built on the robust BEP-20 standard, Valora offers 8 decimal precision for seamless microtransactions. Its ecosystem incorporates the primary token (VAL) and its smallest unit, Vexis, enabling versatility for varied use cases.
+# Valora Token (VAL)
 
-Key Features
-Fixed Supply: A total of 1 billion Valora tokens, ensuring controlled circulation.
-Precision: 8 decimal places, similar to Bitcoin, for micro and macro-level transactions.
-Subunits for Usability:
-1 VALORA: Standard currency.
-1 Vexis = 0.00000001 VAL.
-1 VEX = 0.000001 VAL.
-1 mVAL (Millivalora) = 0.001 VAL.
-1 cVAL (Centivalora) = 0.01 VAL.
-1 dVAL (Decivalora) = 0.1 VAL.
-Mission
-Valora aims to empower global users with secure, scalable, and inclusive financial solutions, enabling seamless transactions and investments. It bridges accessibility and innovation, offering a token for both individual and institutional users.
+Valora Token is a cryptocurrency built on the Binance Smart Chain (BSC), designed to deliver accessibility and sustainable value growth over time. With advanced divisibility and a vision for global adoption, VAL aims to create an inclusive and efficient financial ecosystem.
 
-Use Cases
-Payments: From micro to large-scale transactions, Valora's precision meets all needs.
-Investments: Optimized for high returns with growing market demand.
-Utility: A flexible token for decentralized finance (DeFi) and more.
-Deployment
-Valora operates on the Binance Smart Chain (BSC), offering low transaction fees and fast processing. Its tokenomics is designed to ensure a sustainable and equitable ecosystem.
+## Key Features
 
-Future Vision
-Valora envisions widespread adoption through innovation, strategic partnerships, and community empowerment. It strives to become a symbol of trust and value in the cryptocurrency space.
+- **Total Supply**: 1 billion VAL.  
+- **Advanced Divisibility**:  
+  - **1 VAL**: Main unit.  
+  - **1 Vexis (VXS)**: 0.00000001 VAL (smallest unit).  
+  - **1 Vex (VEX)**: 0.000001 VAL.  
+  - **1 Millivalora (mVAL)**: 0.001 VAL.  
+  - **1 Centivalora (cVAL)**: 0.01 VAL.  
+  - **1 Decivalora (dVAL)**: 0.1 VAL.  
 
+- **Blockchain**: BEP-20 standard on the Binance Smart Chain, ensuring security, speed, and low fees.
 
+## Benefits
+
+- **Global Accessibility**: Modular structure tailored for microtransactions and large-scale investments.  
+- **Security and Transparency**: Open-source, auditable code with advanced token distribution mechanisms.  
+- **Growth Potential**: Focused on increasing market value through strategic planning and robust infrastructure.
+
+## Mission  
+
+To bridge financial accessibility and technological innovation, fostering inclusion and value on a global scale.
+
+**Explore the future with Valora!!**
