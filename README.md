@@ -24,3 +24,5 @@ Valora operates on the Binance Smart Chain (BSC), offering low transaction fees 
 
 Future Vision
 Valora envisions widespread adoption through innovation, strategic partnerships, and community empowerment. It strives to become a symbol of trust and value in the cryptocurrency space.
+
+
