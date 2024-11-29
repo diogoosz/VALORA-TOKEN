@@ -8,8 +8,50 @@ updated version of the code with automatic value conversions (VEXIS, VEX, mVAL, 
 
 ### Contract Code
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valora Token Contract</title>
+    <style>
+        .code-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .code-container pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #282c34;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
 
-
+<div class="code-container">
+    <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+    <pre id="contractCode">
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
@@ -34,14 +76,12 @@ contract ValoraToken is IBEP20 {
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
 
-    // Constructor that defines the initial token supply
     constructor(uint256 initialSupply) {
-        _totalSupply = initialSupply * 10 ** uint256(decimals);  // Adjusts for 8 decimals
+        _totalSupply = initialSupply * 10 ** uint256(decimals);  
         _balances[msg.sender] = _totalSupply;
         emit Transfer(address(0), msg.sender, _totalSupply);
     }
 
-    // BEP20 standard functions
     function totalSupply() external view override returns (uint256) {
         return _totalSupply;
     }
@@ -51,7 +91,7 @@ contract ValoraToken is IBEP20 {
     }
 
     function transfer(address recipient, uint256 amount) external override returns (bool) {
-        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Automatically converts to the smallest unit
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  
         require(recipient != address(0), "ERC20: transfer to the zero address");
         require(_balances[msg.sender] >= amountWithDecimals, "ERC20: transfer amount exceeds balance");
 
@@ -63,14 +103,14 @@ contract ValoraToken is IBEP20 {
     }
 
     function approve(address spender, uint256 amount) external override returns (bool) {
-        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Automatically converts to the smallest unit
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  
         _allowances[msg.sender][spender] = amountWithDecimals;
         emit Approval(msg.sender, spender, amountWithDecimals);
         return true;
     }
 
     function transferFrom(address sender, address recipient, uint256 amount) external override returns (bool) {
-        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Automatically converts to the smallest unit
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  
         require(sender != address(0), "ERC20: transfer from the zero address");
         require(recipient != address(0), "ERC20: transfer to the zero address");
         require(_balances[sender] >= amountWithDecimals, "ERC20: transfer amount exceeds balance");
@@ -93,13 +133,13 @@ contract ValoraToken is IBEP20 {
 
         uint256 totalAmount = 0;
         for (uint256 i = 0; i < amounts.length; i++) {
-            totalAmount += amounts[i] * (10 ** uint256(decimals));  // Consider decimals when summing
+            totalAmount += amounts[i] * (10 ** uint256(decimals));  
         }
 
         require(_balances[msg.sender] >= totalAmount, "ERC20: insufficient balance for distribution");
 
         for (uint256 i = 0; i < recipients.length; i++) {
-            uint256 amountWithDecimals = amounts[i] * (10 ** uint256(decimals));  // Convert to the smallest unit
+            uint256 amountWithDecimals = amounts[i] * (10 ** uint256(decimals));  
             _balances[msg.sender] -= amountWithDecimals;
             _balances[recipients[i]] += amountWithDecimals;
             emit Transfer(msg.sender, recipients[i], amountWithDecimals);
@@ -107,13 +147,13 @@ contract ValoraToken is IBEP20 {
     }
 
     function burn(uint256 amount) public {
-        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Automatically converts to the smallest unit
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  
         require(_balances[msg.sender] >= amountWithDecimals, "ERC20: burn amount exceeds balance");
 
         _balances[msg.sender] -= amountWithDecimals;
         _totalSupply -= amountWithDecimals;
 
-        emit Transfer(msg.sender, address(0), amountWithDecimals); // Emit transfer event to the 0 address (burning)
+        emit Transfer(msg.sender, address(0), amountWithDecimals); 
     }
 
     function getUnitName(uint256 amount) public pure returns (string memory) {
@@ -132,3 +172,19 @@ contract ValoraToken is IBEP20 {
         }
     }
 }
+</pre>
+
+<script>
+function copyCode() {
+    var code = document.getElementById("contractCode");
+    var range = document.createRange();
+    range.selectNode(code);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
+    alert('Contract code copied to clipboard!');
+}
+</script>
+
+</body>
+</html>
