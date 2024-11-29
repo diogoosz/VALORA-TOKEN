@@ -1,0 +1,138 @@
+updated version of the code with automatic value conversions (VEXIS, VEX, mVAL, cVAL, dVAL), internally in the contract.
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+// Interface do BEP20
+interface IBEP20 {
+    function totalSupply() external view returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+    function transfer(address recipient, uint256 amount) external returns (bool);
+    function approve(address spender, uint256 amount) external returns (bool);
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+    function allowance(address owner, address spender) external view returns (uint256);
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+}
+
+contract ValoraToken is IBEP20 {
+    string public constant name = "Valora";
+    string public constant symbol = "VAL";
+    uint8 public constant decimals = 8;
+
+    uint256 private _totalSupply;
+    mapping(address => uint256) private _balances;
+    mapping(address => mapping(address => uint256)) private _allowances;
+
+    // Construtor que define a quantidade inicial de tokens
+    constructor(uint256 initialSupply) {
+        _totalSupply = initialSupply * 10 ** uint256(decimals);  // Ajusta para 8 decimais
+        _balances[msg.sender] = _totalSupply;
+        emit Transfer(address(0), msg.sender, _totalSupply);
+    }
+
+    // Funções padrão do BEP20
+
+    // Retorna o total de tokens em circulação
+    function totalSupply() external view override returns (uint256) {
+        return _totalSupply;
+    }
+
+    // Retorna o saldo de tokens de uma conta específica
+    function balanceOf(address account) external view override returns (uint256) {
+        return _balances[account];
+    }
+
+    // Transfere tokens para um endereço (considerando os decimais)
+    function transfer(address recipient, uint256 amount) external override returns (bool) {
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Converte automaticamente para a menor unidade
+        
+        require(recipient != address(0), "ERC20: transfer to the zero address");
+        require(_balances[msg.sender] >= amountWithDecimals, "ERC20: transfer amount exceeds balance");
+
+        _balances[msg.sender] -= amountWithDecimals;
+        _balances[recipient] += amountWithDecimals;
+
+        emit Transfer(msg.sender, recipient, amountWithDecimals);
+        return true;
+    }
+
+    // Aprova um endereço para gastar tokens em nome do proprietário
+    function approve(address spender, uint256 amount) external override returns (bool) {
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Converte automaticamente para a menor unidade
+        _allowances[msg.sender][spender] = amountWithDecimals;
+        emit Approval(msg.sender, spender, amountWithDecimals);
+        return true;
+    }
+
+    // Transfere tokens de um endereço para outro, com permissão (considerando os decimais)
+    function transferFrom(address sender, address recipient, uint256 amount) external override returns (bool) {
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Converte automaticamente para a menor unidade
+        
+        require(sender != address(0), "ERC20: transfer from the zero address");
+        require(recipient != address(0), "ERC20: transfer to the zero address");
+        require(_balances[sender] >= amountWithDecimals, "ERC20: transfer amount exceeds balance");
+        require(_allowances[sender][msg.sender] >= amountWithDecimals, "ERC20: transfer amount exceeds allowance");
+
+        _balances[sender] -= amountWithDecimals;
+        _balances[recipient] += amountWithDecimals;
+        _allowances[sender][msg.sender] -= amountWithDecimals;
+
+        emit Transfer(sender, recipient, amountWithDecimals);
+        return true;
+    }
+
+    // Retorna a quantidade de tokens que um endereço está autorizado a gastar de outro
+    function allowance(address owner, address spender) external view override returns (uint256) {
+        return _allowances[owner][spender];
+    }
+
+    // Função de distribuição de tokens para múltiplos endereços
+    function distributeTokens(address[] memory recipients, uint256[] memory amounts) public {
+        require(recipients.length == amounts.length, "ERC20: recipients and amounts length mismatch");
+
+        uint256 totalAmount = 0;
+        for (uint256 i = 0; i < amounts.length; i++) {
+            totalAmount += amounts[i] * (10 ** uint256(decimals));  // Considera os decimais ao somar
+        }
+
+        require(_balances[msg.sender] >= totalAmount, "ERC20: insufficient balance for distribution");
+
+        for (uint256 i = 0; i < recipients.length; i++) {
+            uint256 amountWithDecimals = amounts[i] * (10 ** uint256(decimals));  // Converte para a menor unidade
+            _balances[msg.sender] -= amountWithDecimals;
+            _balances[recipients[i]] += amountWithDecimals;
+            emit Transfer(msg.sender, recipients[i], amountWithDecimals);
+        }
+    }
+
+    // Função de queima de tokens (burn) considerando os decimais
+    function burn(uint256 amount) public {
+        uint256 amountWithDecimals = amount * (10 ** uint256(decimals));  // Converte automaticamente para a menor unidade
+        
+        require(_balances[msg.sender] >= amountWithDecimals, "ERC20: burn amount exceeds balance");
+        
+        _balances[msg.sender] -= amountWithDecimals;
+        _totalSupply -= amountWithDecimals;
+        
+        emit Transfer(msg.sender, address(0), amountWithDecimals); // Emite um evento de transferência para o endereço 0 (queimando)
+    }
+
+    // Função para saber o número de unidades menores de VALORA
+    function getUnitName(uint256 amount) public pure returns (string memory) {
+        if (amount == 10 ** 6) {
+            return "VEX";
+        } else if (amount == 10 ** 7) {
+            return "VEXIS";
+        } else if (amount == 10 ** 5) {
+            return "mVAL";
+        } else if (amount == 10 ** 4) {
+            return "cVAL";
+        } else if (amount == 10 ** 3) {
+            return "dVAL";
+        } else {
+            return "VAL";
+        }
+    }
+}
