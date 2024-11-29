@@ -8,11 +8,6 @@ updated version of the code with automatic value conversions (VEXIS, VEX, mVAL, 
 
 ### Contract Code
 
-```html
-<button onclick="copyToClipboard()">Copy Code</button>
-
-<pre id="contractCode">
-<code>
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
@@ -135,18 +130,3 @@ contract ValoraToken is IBEP20 {
         }
     }
 }
-</code>
-</pre>
-
-<script>
-function copyToClipboard() {
-  var copyText = document.getElementById("contractCode");
-  var range = document.createRange();
-  range.selectNode(copyText);
-  window.getSelection().removeAllRanges();
-  window.getSelection().addRange(range);
-  document.execCommand("copy");
-  alert("Code copied to clipboard!");
-}
-</script>
-
